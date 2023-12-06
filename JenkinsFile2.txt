@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                // Code from GitHub repository
+                git branch: 'main', credentialsId: '1.1', url: 'https://github.com/Sebastian-Firsaev/Jenkins-Project.git'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                // Gradle Wrapper to build 
+                bat './gradlew clean build -x test' // Exclude test execution
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run tests and generate reports
+                bat './gradlew test' // Run tests
+                junit '**/build/test-results/**/*.xml' // report
+            }
+        }
+    }
+}
